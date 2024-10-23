@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Funcionários</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Controle de Funcionários</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-info">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <h2>Cadastrar Funcionário</h2>
+        <form action="{{ url_for('cadastro_funcionario') }}" method="POST">
+            <div class="form-group">
+                <label for="cpf_prefixo">CPF (5 primeiros números)</label>
+                <input type="text" class="form-control" id="cpf_prefixo" name="cpf_prefixo" required>
+            </div>
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar Funcionário</button>
+        </form>
+
+        <h2>Registrar Horas Extras</h2>
+        <form action="{{ url_for('horas_extras') }}" method="POST">
+            <div class="form-group">
+                <label for="funcionario_id">ID do Funcionário</label>
+                <input type="text" class="form-control" id="funcionario_id" name="funcionario_id" required>
+            </div>
+            <div class="form-group">
+                <label for="data">Data</label>
+                <input type="date" class="form-control" id="data" name="data" required>
+            </div>
+            <div class="form-group">
+                <label for="horas">Horas Extras</label>
+                <input type="number" class="form-control" id="horas" name="horas" required>
+            </div>
+            <button type="submit" class="btn btn-success">Registrar Horas Extras</button>
+        </form>
+
+        <h2>Lista de Funcionários</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CPF</th>
+                    <th>Nome</th>
+                    <th>Ativo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for funcionario in funcionarios %}
+                    <tr>
+                        <td>{{ funcionario['id'] }}</td>
+                        <td>{{ funcionario['cpf_prefixo'] }}</td>
+                        <td>{{ funcionario['nome'] }}</td>
+                        <td>{{ 'Sim' if funcionario['ativo'] else 'Não' }}</td>
+                        <td>
+                            <form action="{{ url_for('editar_funcionario', id=funcionario['id']) }}" method="POST" style="display:inline;">
+                                <input type="text" name="nome" value="{{ funcionario['nome'] }}" required>
+                                <input type="checkbox" name="ativo" {% if funcionario['ativo'] %} checked {% endif %}>
+                                <button type="submit" class="btn btn-warning btn-sm">Editar</button>
+                            </form>
+                            <form action="{{ url_for('desabilitar_funcionario', id=funcionario['id']) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm">Desabilitar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Consultar Horas Extras</h2>
+        <form action="{{ url_for('horas_extras_funcionario') }}" method="POST">
+            <div class="form-group">
+                <label for="cpf_prefixo">CPF (5 primeiros números)</label>
+                <input type="text" class="form-control" id="cpf_prefixo" name="cpf_prefixo" required>
+            </div>
+            <button type="submit" class="btn btn-info">Consultar Horas Extras</button>
+        </form>
+    </div>
+</body>
+</html>

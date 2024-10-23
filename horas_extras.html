@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horas Extras</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Horas Extras - {{ funcionario['nome'] }}</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Data</th>
+                    <th>Horas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for horas in horas_extras %}
+                    <tr>
+                        <td>{{ horas['id'] }}</td>
+                        <td>{{ horas['data'] }}</td>
+                        <td>{{ horas['horas'] }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">Nenhuma hora extra registrada.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
+    </div>
+</body>
+</html>
